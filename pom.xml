@@ -26,8 +26,9 @@
 		<module>laboratory.system</module>
 		<module>laboratory.security</module>
 		<module>laboratory.equipment</module>
-		<module>laboratory.web</module>
+		
 		<module>laboratory.infrastructure</module>
 		<module>laboratory.project</module>
+		<module>laboratory.web</module>
 	</modules>
 </project>
