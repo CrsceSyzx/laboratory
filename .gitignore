@@ -2,23 +2,19 @@
 .idea/
 .svn/
 *.iml
-.settings/
 .classpath
-.project
 /lib/
 /logs/
 settings.gradle
 
 # Eclipse
 .metadata/
-.settings/
 bin/
 tmp/
 *.tmp
 *.bak
 *.swp
 *~.nib
-.project
 .classpath
 .loadpath
 
