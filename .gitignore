@@ -9,6 +9,8 @@ settings.gradle
 
 # Eclipse
 .metadata/
+.settings/
+.project
 bin/
 tmp/
 *.tmp
