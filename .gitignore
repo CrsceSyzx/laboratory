@@ -52,12 +52,3 @@ buildNumber.properties
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
-
-#gradle ignore
-.gradle
-/build/
-gradle-app.setting
-!gradle-wrapper.jar
-.gradletasknamecache
-/laboratory.infrastructure/
-/laboratory.web/
