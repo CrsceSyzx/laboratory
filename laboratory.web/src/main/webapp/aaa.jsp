@@ -43,7 +43,6 @@
                         	<div class="form-top">
                         		<div class="form-top-left">
                         			<h3>用户登陆</h3>
-                            		<p>Enter your username and password to log on:</p>
                         		</div>
                         		<div class="form-top-right">
                         			<i class="fa fa-lock"></i>
