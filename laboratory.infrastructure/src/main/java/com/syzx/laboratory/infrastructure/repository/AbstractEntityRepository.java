@@ -41,7 +41,7 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
      * @author 张晓远
      */
     protected Session currentSession() {
-        return sessionFactory.getCurrentSession();
+        return sessionFactory.getCurrentSession(); 
     }
 
     /**
