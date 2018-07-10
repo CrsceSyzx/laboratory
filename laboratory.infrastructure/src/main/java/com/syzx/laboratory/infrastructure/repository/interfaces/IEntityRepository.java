@@ -5,12 +5,13 @@
  * Create Date: 2018年1月29日 上午10:49:47
  * Copyright (c) 2018, syzx.com All Rights Reserved.
  */
+
 package com.syzx.laboratory.infrastructure.repository.interfaces;
+
+import com.syzx.laboratory.infrastructure.domain.AbstractEntity;
 
 import java.util.Collection;
 import java.util.List;
-
-import com.syzx.laboratory.infrastructure.domain.AbstractEntity;
 
 /**
  * 实体类通用仓库接口. <br/>
@@ -25,8 +26,7 @@ import com.syzx.laboratory.infrastructure.domain.AbstractEntity;
 public interface IEntityRepository<T extends AbstractEntity> {
 
     /**
-     * 
-     * 通过实体id查询实体. <br/>
+     * 通过id查询实体. <br/>
      *
      * @param id 实体id
      * @return 所查询id对应的实体
@@ -37,8 +37,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public T getById(String id);
 
     /**
-     * 
-     * 通过实体id集合查询实体. <br/>
+     * 通过id集合查询实体. <br/>
      *
      * @param ids 实体id集合
      * @return 所查询id对应的实体列表
@@ -49,7 +48,6 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public List<T> getByIds(Collection<String> ids);
 
     /**
-     * 
      * 获取所有当前类型的实体集合. <br/>
      *
      * @return 所有当前类型的实体集合.
@@ -60,7 +58,6 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public List<T> getAll();
 
     /**
-     * 
      * 新建或者更新实体. <br/>
      *
      * @param entity 需要新建或者更新的实体.
@@ -71,7 +68,6 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public void merge(T entity);
 
     /**
-     * 
      * 持久化实体. <br/>
      *
      * @param entity 需要持久化的实体.
@@ -82,7 +78,6 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public void persist(T entity);
 
     /**
-     * 
      * 删除实体. <br/>
      *
      * @param entity 需要删除的实体.
@@ -93,8 +88,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public void delete(T entity);
 
     /**
-     * 
-     * 通过实体id删除实体 <br/>
+     * 通过实体id删除实体. <br/>
      *
      * @param id 需要删除的实体id.
      * @return 被删除的实体.
@@ -105,7 +99,6 @@ public interface IEntityRepository<T extends AbstractEntity> {
     public T delete(String id);
 
     /**
-     * 
      * 获取所有当前类型的实体数量. <br/>
      *
      * @return 所有当前类型的实体数量.

@@ -5,6 +5,7 @@
  * Create Date: 2018年1月29日 下午11:08:48
  * Copyright (c) 2018, syzx.com All Rights Reserved.
  */
+
 package com.syzx.laboratory.infrastructure.utils;
 
 /**
@@ -16,11 +17,34 @@ package com.syzx.laboratory.infrastructure.utils;
  * @since JDK 1.8
  */
 public class Validator {
+    
+    /**
+     * 验证对象是否为空. <br/>
+     *
+     * @param validateObject 验证对象
+     * @return 是 为非空，否 为空
+     *
+     * @since JDK 1.8
+     * @author 张晓远
+     */
     public static boolean notNull(Object validateObject) {
         return validateObject != null;
     }
 
+    /**
+     * 验证字符串是否为空. <br/>
+     *
+     * @param validateString 验证字符串
+     * @return 是 为非空，否 为空
+     *
+     * @since JDK 1.8
+     * @author 张晓远
+     */
     public static boolean notEmptyString(String validateString) {
-        return validateString != null && !"".equals(validateString);
+        if (validateString == null) {
+            return false;
+        } else {
+            return !"".equals(validateString.trim());
+        }
     }
 }

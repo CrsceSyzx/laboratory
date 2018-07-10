@@ -5,7 +5,11 @@
  * Create Date: 2018年1月29日 下午10:38:54
  * Copyright (c) 2018, syzx.com All Rights Reserved.
  */
+
 package com.syzx.laboratory.infrastructure.domain;
+
+import com.syzx.laboratory.infrastructure.utils.ExceptionValidator;
+import com.syzx.laboratory.infrastructure.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,18 +25,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import com.syzx.laboratory.infrastructure.utils.SystemConstant;
-import com.syzx.laboratory.infrastructure.utils.Validator;
-
 /**
  * TODO 描述类的功能. <br/>
- * Create Date: 2018年1月29日 下午10:38:54 <br/>
- *
+ * 
+ * <p>Create Date: 2018年1月29日 下午10:38:54 <br/>
  * @author 张晓远
  * @version 0.0.1
  * @since JDK 1.8
  */
 public abstract class TreeNodeEntity extends AbstractEntity implements Comparable<TreeNodeEntity> {
+
+    private static final String ICON_DEFAULT = "icon-default";
+    private static final int NODEORDER_DEFAULT = 0;
+    private static final int ORDER_INCREMENT_INTERVAL = 100;
 
     private String name;
     private String icon;
@@ -40,30 +45,32 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     private int nodeOrder;
     private TreeNodeEntity parentNode;
     private Set<TreeNodeEntity> subNodes;
+    private List<TreeNodeEntity> sortedSubNodes;
+
     private boolean isLeaf;
 
     /**
-     *创建一个TreeNodeEntity的实例.
+     * 创建一个TreeNodeEntity的实例.
      *
      */
     public TreeNodeEntity() {
-        this(null);
+        this(null, null, NODEORDER_DEFAULT);
     }
 
     /**
-     *创建一个TreeNodeEntity的实例.
+     * 创建一个TreeNodeEntity的实例.
      *
-     * @param name
+     * @param name 节点名称
      */
     public TreeNodeEntity(String name) {
-        this(name, null);
+        this(name, null, NODEORDER_DEFAULT);
     }
 
     /**
      *创建一个TreeNodeEntity的实例.
      *
-     * @param name
-     * @param nodeOrder
+     * @param name 节点名称
+     * @param nodeOrder 同级节点排序号
      */
     public TreeNodeEntity(String name, int nodeOrder) {
         this(name, null, nodeOrder);
@@ -72,19 +79,19 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     /**
      *创建一个TreeNodeEntity的实例.
      *
-     * @param name
-     * @param icon
+     * @param name 节点名称
+     * @param icon 节点图标
      */
     public TreeNodeEntity(String name, String icon) {
-        this(name, icon, SystemConstant.NODEORDER_DEFAULT);
+        this(name, icon, NODEORDER_DEFAULT);
     }
 
     /**
      *创建一个TreeNodeEntity的实例.
      *
-     * @param name
-     * @param icon
-     * @param nodeOrder
+     * @param name 节点名称
+     * @param icon 节点图标
+     * @param nodeOrder 同级节点排序号
      */
     public TreeNodeEntity(String name, String icon, int nodeOrder) {
         super();
@@ -94,13 +101,14 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
 
         parentNode = null;
         subNodes = new HashSet<TreeNodeEntity>();
+        sortedSubNodes = new ArrayList<TreeNodeEntity>();
         updateIsLeaf();
     }
 
     /**
-     * 获取 name.
+     * 获取 节点名称.
      *
-     * @return  name
+     * @return  name 节点名称
      * @since   JDK 1.8
      */
     @Column
@@ -109,9 +117,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 设置 name.
+     * 设置 节点名称.
      *
-     * @param   name
+     * @param   name 节点名称
      * @since   JDK 1.8
      */
     public void setName(String name) {
@@ -119,9 +127,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 获取 icon.
+     * 获取 节点图标.
      *
-     * @return  icon
+     * @return  icon 节点图标
      * @since   JDK 1.8
      */
     @Column
@@ -130,23 +138,23 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 设置 icon.
+     * 设置 节点图标.
      *
-     * @param   icon
+     * @param   icon 节点图标
      * @since   JDK 1.8
      */
     public void setIcon(String icon) {
         if (Validator.notEmptyString(icon)) {
             this.icon = icon;
         } else {
-            this.icon = SystemConstant.ICON_DEFAULT;
+            this.icon = ICON_DEFAULT;
         }
     }
 
     /**
-     * 获取 nodeOrder.
+     * 获取 同级节点的排序序号.
      *
-     * @return  nodeOrder
+     * @return  nodeOrder 同级节点的排序序号
      * @since   JDK 1.8
      */
     @Column
@@ -155,9 +163,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 设置 nodeOrder.
+     * 设置 同级节点的排序序号.
      *
-     * @param   nodeOrder
+     * @param   nodeOrder 同级节点的排序序号
      * @since   JDK 1.8
      */
     public void setNodeOrder(int nodeOrder) {
@@ -165,9 +173,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 获取 parentNode.
+     * 获取 父节点.
      *
-     * @return  parentNode
+     * @return  parentNode 父节点
      * @since   JDK 1.8
      */
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, optional = true)
@@ -177,9 +185,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 设置 parentNode.
+     * 设置 父节点.
      *
-     * @param   parentNode
+     * @param   parentNode 父节点
      * @since   JDK 1.8
      */
     public void setParentNode(TreeNodeEntity parentNode) {
@@ -187,9 +195,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 获取 subNodes.
+     * 获取 子节点集合.
      *
-     * @return  subNodes
+     * @return  subNodes 子节点集合
      * @since   JDK 1.8
      */
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "parentNode")
@@ -198,9 +206,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 设置 subNodes.
+     * 设置 子节点集合.
      *
-     * @param   subNodes
+     * @param   subNodes 子节点集合
      * @since   JDK 1.8
      */
     public void setSubNodes(Set<TreeNodeEntity> subNodes) {
@@ -209,9 +217,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 获取 isLeaf.
+     * 获取 是否是叶子节点.
      *
-     * @return  isLeaf
+     * @return  isLeaf 是否是叶子节点
      * @since   JDK 1.8
      */
     @Column
@@ -221,9 +229,9 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 设置 isLeaf.
+     * 设置 是否是叶子节点.
      *
-     * @param   isLeaf
+     * @param   isLeaf 是否是叶子节点
      * @since   JDK 1.8
      */
     public void setLeaf(boolean isLeaf) {
@@ -231,35 +239,59 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     }
 
     /**
-     * 
-     * TODO (这里描述该方法的功能). <br/>
+     * 获取排序后的叶子节点. <br/>
      *
-     * @return
+     * @return 排序后的叶子节点
      *
      * @since JDK 1.8
      * @author 张晓远
      */
     @Transient
-    public List<TreeNodeEntity> getSortedNodes() {
-        List<TreeNodeEntity> sortedNodes = new ArrayList<TreeNodeEntity>(subNodes);
-        Collections.sort(sortedNodes);
-        return sortedNodes;
+    public List<TreeNodeEntity> getSortedSubNodes() {
+        if (sortedSubNodes == null) {
+            sortedSubNodes = new ArrayList<TreeNodeEntity>(subNodes);
+            Collections.sort(sortedSubNodes);
+        }
+
+        return sortedSubNodes;
     }
 
+    /**
+     *  添加子节点. <br/>
+     *
+     * @param node 子节点
+     *
+     * @since JDK 1.8
+     * @author 张晓远
+     */
     public void addSubNode(TreeNodeEntity node) {
-        subNodes.add(node);
-        if (node.nodeOrder == 0) {
-            node.nodeOrder = subNodes.size();
+        ExceptionValidator.notNull(node, "node");
+
+        sortedSubNodes.add(node);
+        Collections.sort(sortedSubNodes);
+
+        if (node.nodeOrder == NODEORDER_DEFAULT) {
+            node.nodeOrder = sortedSubNodes.get(sortedSubNodes.size() - 1).nodeOrder + ORDER_INCREMENT_INTERVAL;
         }
+
+        subNodes.add(node);
         node.setParentNode(this);
         updateIsLeaf();
     }
 
+    /**
+     * 根据子节点的数量更新isLeaf的值. <br/>
+     *
+     * @since JDK 1.8
+     * @author 张晓远
+     */
     public void updateIsLeaf() {
         this.isLeaf = subNodes.size() == 0;
     }
 
     /**
+     * 根据nodeOrder比较节点的大小. <br/>
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(TreeNodeEntity anotherNode) {

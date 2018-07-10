@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:testConfigurations/database/mysql.properties
+                </value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource"
+        class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        destroy-method="close">
+        <property name="driverClass">
+            <value>${jdbc.driverClassName}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${jdbc.url}</value>
+        </property>
+        <property name="user">
+            <value>${jdbc.user}</value>
+        </property>
+        <property name="password">
+            <value>${jdbc.password}</value>
+        </property>
+        <property name="initialPoolSize">
+            <value>${pool.initialSize}</value>
+        </property>
+        <property name="minPoolSize">
+            <value>${pool.minSize}</value>
+        </property>
+        <property name="maxPoolSize">
+            <value>${pool.maxSize}</value>
+        </property>
+    </bean>
+
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="packagesToScan">
+            <list>
+                <value>com.syzx.laboratory.infrastructure.domain</value>
+                <!-- value>com.crsce.standardlibrary.security.domain</value> 
+                <value>com.crsce.standardlibrary.system.domain</value -->
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.show_sql">${hibernate.showSql}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <tx:advice id="txAdvice"
+        transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" propagation="REQUIRED" />
+            <tx:method name="persist*" propagation="REQUIRED" />
+            <tx:method name="merge*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="repositoryBase"
+            expression="execution(* com.syzx.laboratory.infrastructure.repository.interfaces.*.*(..))" />
+        <aop:advisor pointcut-ref="repositoryBase"
+            advice-ref="txAdvice" />
+    </aop:config>
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

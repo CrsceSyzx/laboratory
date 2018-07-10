@@ -6,6 +6,7 @@
  * Copyright (c) 2018, syzx.com All Rights Reserved.
  *
  */
+
 package com.syzx.laboratory.infrastructure.domain;
 
 import java.util.Date;
@@ -19,8 +20,8 @@ import javax.persistence.InheritanceType;
 
 /**
  * 抽象实体类，所有实体类的基类，所有实体类必须继承此类. <br/>
- * Create Date: 2018年1月29日 上午9:36:36 <br/>
- *
+ * 
+ * <p>Create Date: 2018年1月29日 上午9:36:36 <br/>
  * @author 张晓远
  * @version 0.0.1
  * @since JDK 1.8
@@ -30,12 +31,15 @@ import javax.persistence.InheritanceType;
 public abstract class AbstractEntity {
 
     private String id;
-
+    
     private Date createTime;
     private Date lastModifyTime;
 
     private String description;
 
+    /**
+     * 创建一个AbstractEntity的实例.
+     */
     public AbstractEntity() {
         id = UUID.randomUUID().toString();
         createTime = new Date();

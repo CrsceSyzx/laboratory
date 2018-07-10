@@ -5,7 +5,11 @@
  * Create Date: 2018年1月29日 上午11:58:53
  * Copyright (c) 2018, syzx.com All Rights Reserved.
  */
+
 package com.syzx.laboratory.infrastructure.repository;
+
+import com.syzx.laboratory.infrastructure.domain.AbstractEntity;
+import com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -14,9 +18,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-
-import com.syzx.laboratory.infrastructure.domain.AbstractEntity;
-import com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository;
 
 /**
  * TODO 描述类的功能. <br/>
@@ -32,7 +33,6 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     protected Class<T> entityClassType;
 
     /**
-     * 
      * 【非公开方法】获取Session. <br/>
      *
      * @return
@@ -41,14 +41,13 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
      * @author 张晓远
      */
     protected Session currentSession() {
-        return sessionFactory.getCurrentSession(); 
+        return sessionFactory.getCurrentSession();
     }
 
     /**
-     * 
      * 【非公开方法】创建一个针对当前类型的查询. <br/>
      *
-     * @param queryString
+     * @param queryString 查询字符串
      * @return
      *
      * @since JDK 1.8
@@ -59,10 +58,9 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     }
 
     /**
-     * 
-     *创建一个AbstractEntityRepository的实例.
+     * 创建一个AbstractEntityRepository的实例.
      *
-     * @param sessionFactory
+     * @param sessionFactory sessionFactory
      */
     @SuppressWarnings("unchecked")
     public AbstractEntityRepository(SessionFactory sessionFactory) {
@@ -72,6 +70,7 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     }
 
     /**
+     * 通过id查询实体. 
      * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#getById(java.lang.String)
      */
     public T getById(String id) {
@@ -79,6 +78,7 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     }
 
     /**
+     * 查询实体集合.
      * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#getByIds(java.util.Collection)
      */
     public List<T> getByIds(Collection<String> ids) {
@@ -90,6 +90,7 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     }
 
     /**
+     * 获取所有当前类型的实体集合. 
      * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#getAll()
      */
     public List<T> getAll() {
@@ -98,27 +99,34 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     }
 
     /**
-     * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#merge(com.syzx.laboratory.infrastructure.domain.AbstractEntity)
+     * 新建或者更新实体. 
+     * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#merge
+     * (com.syzx.laboratory.infrastructure.domain.AbstractEntity)
      */
     public void merge(T entity) {
         currentSession().merge(entity);
     }
 
     /**
-     * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#persist(com.syzx.laboratory.infrastructure.domain.AbstractEntity)
+     * 持久化实体. 
+     * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#persist
+     * (com.syzx.laboratory.infrastructure.domain.AbstractEntity)
      */
     public void persist(T entity) {
         currentSession().persist(entity);
     }
 
     /**
-     * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#delete(com.syzx.laboratory.infrastructure.domain.AbstractEntity)
+     * 删除实体. 
+     * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#delete
+     * (com.syzx.laboratory.infrastructure.domain.AbstractEntity)
      */
     public void delete(T entity) {
         currentSession().delete(entity);
     }
 
     /**
+     * 通过实体id删除实体. 
      * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#delete(java.lang.String)
      */
     public T delete(String id) {
@@ -129,6 +137,7 @@ public abstract class AbstractEntityRepository<T extends AbstractEntity> impleme
     }
 
     /**
+     * 获取所有当前类型的实体数量. 
      * @see com.syzx.laboratory.infrastructure.repository.interfaces.IEntityRepository#total()
      */
     public long total() {
