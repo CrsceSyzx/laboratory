@@ -13,8 +13,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<source.encoding>UTF-8</source.encoding>
-		<spring.version>5.0.3.RELEASE</spring.version>
-		<springsecurity.version>5.0.1.RELEASE</springsecurity.version>
+		<spring.version>4.3.18.RELEASE</spring.version>
+		<springsecurity.version>4.2.3.RELEASE</springsecurity.version>
 		<jackson.version>1.9.13</jackson.version>
 	</properties>
 
@@ -83,9 +83,14 @@
 
 		<!-- database -->
 		<dependency>
+		    <groupId>org.eclipse.persistence</groupId>
+		    <artifactId>javax.persistence</artifactId>
+		    <version>2.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.2.12.Final</version>
+			<version>5.2.17.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mchange</groupId>
