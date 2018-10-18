@@ -12,11 +12,18 @@ package com.syzx.laboratory.infrastructure.domain;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * 抽象实体类，所有实体类的基类，所有实体类必须继承此类. <br/>
@@ -31,7 +38,7 @@ import javax.persistence.InheritanceType;
 public abstract class AbstractEntity {
 
     private String id;
-    
+
     private Date createTime;
     private Date lastModifyTime;
 
@@ -42,37 +49,44 @@ public abstract class AbstractEntity {
      */
     public AbstractEntity() {
         id = UUID.randomUUID().toString();
-        createTime = new Date();
-        lastModifyTime = (Date) createTime.clone();
+        //createTime = new Date();
+        //lastModifyTime = (Date) createTime.clone();
     }
 
+    @Access(AccessType.FIELD)
     @Id
     @Column(length = 36)
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    //    public void setId(String id) {
+    //        this.id = id;
+    //    }
 
-    @Column
+    @Access(AccessType.FIELD)
+    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+    //    public void setCreateTime(Date createTime) {
+    //        this.createTime = createTime;
+    //    }
 
+    @Access(AccessType.FIELD)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
     public Date getLastModifyTime() {
         return lastModifyTime;
     }
 
-    public void setLastModifyTime(Date lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
-    }
+    //    public void setLastModifyTime(Date lastModifyTime) {
+    //        this.lastModifyTime = lastModifyTime;
+    //    }
 
     @Column
     public String getDescription() {
@@ -83,18 +97,18 @@ public abstract class AbstractEntity {
         this.description = description;
     }
 
-    public void entityModify() {
-        lastModifyTime = new Date();
-    }
+    //    public void entityModify() {
+    //        lastModifyTime = new Date();
+    //    }
 
     @Override
-    public boolean equals(Object entity) {
-        if (entity == null) {
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof AbstractEntity)) {
             return false;
         }
 
-        AbstractEntity entityBase = (AbstractEntity) entity;
-        return id.equals(entityBase.getId());
+        AbstractEntity entity = (AbstractEntity) obj;
+        return id.equals(entity.getId());
     }
 
     @Override

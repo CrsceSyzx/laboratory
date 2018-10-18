@@ -9,7 +9,9 @@
 package com.syzx.laboratory.infrastructure.repository.interfaces;
 
 import com.syzx.laboratory.infrastructure.domain.AbstractEntity;
+import com.syzx.laboratory.infrastructure.repository.PagingQueryResult;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,13 +19,13 @@ import java.util.List;
  * 实体类通用仓库接口. <br/>
  * Create Date: 2018年1月29日 上午11:23:18 <br/>
  * 
- * @param <T> 仓库的实体类型，必须是{@link AbstractEntity}的子类型
+ * @param <EntityT> 仓库的实体类型，必须是{@link AbstractEntity}的子类型
  * 
  * @author 张晓远
  * @version 0.0.1
  * @since JDK 1.8
  */
-public interface IEntityRepository<T extends AbstractEntity> {
+public interface IEntityRepository<KeyT extends Serializable, EntityT extends AbstractEntity> {
 
     /**
      * 通过id查询实体. <br/>
@@ -34,7 +36,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public T getById(String id);
+    public EntityT getById(KeyT id);
 
     /**
      * 通过id集合查询实体. <br/>
@@ -45,7 +47,18 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public List<T> getByIds(Collection<String> ids);
+    public List<EntityT> getByIds(Collection<KeyT> ids);
+
+    /**
+     * 通过实体查询条件获取实体. <br/>
+     *
+     * @param entityQuery 实体条件集合
+     * @return 符合实体查询条件的实体列表
+     *
+     * @since JDK 1.8
+     * @author 张晓远
+     */
+    public PagingQueryResult<EntityT> get(IEntityQuery entityQuery);
 
     /**
      * 获取所有当前类型的实体集合. <br/>
@@ -55,7 +68,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public List<T> getAll();
+    public List<EntityT> getAll();
 
     /**
      * 新建或者更新实体. <br/>
@@ -65,7 +78,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public void merge(T entity);
+    public void merge(EntityT entity);
 
     /**
      * 持久化实体. <br/>
@@ -75,7 +88,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public void persist(T entity);
+    public void persist(EntityT entity);
 
     /**
      * 删除实体. <br/>
@@ -85,7 +98,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public void delete(T entity);
+    public void delete(EntityT entity);
 
     /**
      * 通过实体id删除实体. <br/>
@@ -96,7 +109,7 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @since JDK 1.8
      * @author 张晓远
      */
-    public T delete(String id);
+    public EntityT delete(KeyT id);
 
     /**
      * 获取所有当前类型的实体数量. <br/>
@@ -107,4 +120,15 @@ public interface IEntityRepository<T extends AbstractEntity> {
      * @author 张晓远
      */
     public long total();
+
+    /**
+     * 获取所有当前类型符合查询条件的实体数量.  <br/>
+     *
+     * @param entityQuery 实体查询条件
+     * @return 符合查询条件的实体列表
+     *
+     * @since JDK 1.8
+     * @author 张晓远
+     */
+    public long total(IEntityQuery entityQuery);
 }

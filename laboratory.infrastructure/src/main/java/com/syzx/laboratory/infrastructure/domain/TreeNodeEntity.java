@@ -19,6 +19,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,6 +34,7 @@ import javax.persistence.Transient;
  * @version 0.0.1
  * @since JDK 1.8
  */
+@Entity
 public abstract class TreeNodeEntity extends AbstractEntity implements Comparable<TreeNodeEntity> {
 
     private static final String ICON_DEFAULT = "icon-default";
@@ -101,7 +103,6 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
 
         parentNode = null;
         subNodes = new HashSet<TreeNodeEntity>();
-        sortedSubNodes = new ArrayList<TreeNodeEntity>();
         updateIsLeaf();
     }
 
@@ -223,7 +224,7 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
      * @since   JDK 1.8
      */
     @Column
-    @org.hibernate.annotations.Type(type = "yes_no")
+    //@org.hibernate.annotations.Type(type = "yes_no")
     public boolean isLeaf() {
         return isLeaf;
     }
@@ -267,7 +268,7 @@ public abstract class TreeNodeEntity extends AbstractEntity implements Comparabl
     public void addSubNode(TreeNodeEntity node) {
         ExceptionValidator.notNull(node, "node");
 
-        sortedSubNodes.add(node);
+        getSortedSubNodes().add(node);
         Collections.sort(sortedSubNodes);
 
         if (node.nodeOrder == NODEORDER_DEFAULT) {

@@ -6,7 +6,10 @@
  * Copyright (c) 2018, syzx.com All Rights Reserved.
  */
 
-package com.syzx.laboratory.infrastructure.domain;
+package com.syzx.laboratory.infrastructure.test.impl;
+
+import com.syzx.laboratory.infrastructure.domain.TreeNodeEntity;
+import javax.persistence.Entity;
 
 /**
  * TODO 描述类的功能. <br/>
@@ -16,6 +19,7 @@ package com.syzx.laboratory.infrastructure.domain;
  * @version 0.0.1
  * @since JDK 1.8
  */
+@Entity
 public class TreeNodeEntityImpl extends TreeNodeEntity {
 
     /**
